@@ -5,13 +5,14 @@ import 'package:projeto_despesas_semanais/models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final void Function(String) onRemove;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.onRemove);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 600,
       child:
           transactions.isEmpty
               ? Column(
@@ -35,44 +36,31 @@ class TransactionList extends StatelessWidget {
                 itemBuilder: (ctx, index) {
                   final tr = transactions[index];
                   return Card(
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.purple, width: 2),
-                          ),
-                          child: Text(
-                            'R\$ ${tr.value.toStringAsFixed(2)}',
-                            style: Theme.of(context).textTheme.titleSmall,
-                            // TextStyle(
-                            //   color: Colors.purple,
-                            //   fontWeight: FontWeight.bold,
-                            //   fontSize: 20,
-                            // ),
+                    elevation: 5,
+                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: FittedBox(
+                            child: Text('R\$ ${tr.value.toStringAsFixed(2)}'),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              tr.title,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              DateFormat('d MMM y').format(tr.date),
-                              style: TextStyle(color: Colors.blueGrey),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
+                      title: Text(
+                        tr.title,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      subtitle: Text(
+                        DateFormat('d MMM y').format(tr.date),
+                        style: TextStyle(color: Colors.blueGrey),
+                      ),
+                      trailing: IconButton(
+                        onPressed: () => onRemove(tr.id),
+                        icon: Icon(Icons.delete),
+                        color: Colors.red,
+                      ),
                     ),
                   );
                 },

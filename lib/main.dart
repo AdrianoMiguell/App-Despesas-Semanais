@@ -71,6 +71,25 @@ class _MyHomePageState extends State<MyHomePage> {
       510.55,
       DateTime.now().subtract(Duration(days: 2)),
     ),
+    Transaction('t4', 'Novo Lapis', 1.55, DateTime.now()),
+    Transaction(
+      't5',
+      'Novo Borrada',
+      1.55,
+      DateTime.now().subtract(Duration(days: 5)),
+    ),
+    Transaction(
+      't6',
+      'Novo Livro',
+      50.55,
+      DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Transaction(
+      't7',
+      'Novo Celular',
+      1000.55,
+      DateTime.now().subtract(Duration(days: 4)),
+    ),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -79,12 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  _addTransaction(String nTitle, double nValue) {
+  _addTransaction(String nTitle, double nValue, DateTime date) {
     final newTransaction = Transaction(
       Random().nextDouble().toString(),
       nTitle,
       nValue,
-      DateTime.now(),
+      date,
     );
 
     setState(() {
@@ -92,6 +111,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     Navigator.of(context).pop();
+  }
+
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
   }
 
   _openTransactionFromModal(BuildContext context) {
@@ -122,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_transactions),
+            TransactionList(_transactions, _removeTransaction),
           ],
         ),
       ),
